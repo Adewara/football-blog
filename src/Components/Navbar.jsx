@@ -43,7 +43,7 @@ function Navbar() {
 
         {/* Nav Menu */}
         <ul
-          className={`flex-col lg:flex-row lg:flex items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-6 absolute lg:static top-full left-0 w-full lg:w-auto bg-green-600 lg:bg-transparent px-4 py-4 lg:p-0 transition-all duration-300 ${
+          className={`flex-col lg:flex-row lg:flex items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-6 absolute lg:static top-full left-0 w-full lg:w-auto bg-gray-800 lg:bg-transparent px-4 py-4 lg:p-0 transition-all duration-300 ${
             menuOpen ? "flex" : "hidden"
           }`}
         >
@@ -58,7 +58,7 @@ function Navbar() {
                 if (window.innerWidth < 1024) toggleDropdown(); // only on mobile
               }}
             >
-              <span>Dropdown</span>
+              <span>Premier League</span>
               <span className="ml-1 lg:hidden">
                 {dropdownOpen ? (
                   <ChevronUp size={16} />
@@ -74,14 +74,23 @@ function Navbar() {
                 dropdownOpen ? "block" : "hidden"
               } lg:group-hover:block lg:opacity-0 lg:invisible lg:group-hover:visible lg:group-hover:opacity-100 lg:w-40`}
             >
-              <li className="px-4 py-2 hover:bg-green-800 cursor-pointer whitespace-nowrap">
-                Lorem
+              <li className="px-4 py-2 hover:bg-gray-900 cursor-pointer whitespace-nowrap">
+                Liverpool
               </li>
-              <li className="px-4 py-2 hover:bg-green-800 cursor-pointer whitespace-nowrap">
-                Ipsum
+              <li className="px-4 py-2 hover:bg-gray-900 cursor-pointer whitespace-nowrap">
+                Manchester City
               </li>
-              <li className="px-4 py-2 hover:bg-green-800 cursor-pointer whitespace-nowrap">
-                Dolor
+              <li className="px-4 py-2 hover:bg-gray-900 cursor-pointer whitespace-nowrap">
+                Manchester United
+              </li>
+              <li className="px-4 py-2 hover:bg-gray-900 cursor-pointer whitespace-nowrap">
+                Chelsea
+              </li>
+              <li className="px-4 py-2 hover:bg-gray-900 cursor-pointer whitespace-nowrap">
+                Arsenal
+              </li>
+              <li className="px-4 py-2 hover:bg-gray-900 cursor-pointer whitespace-nowrap">
+                Tottenham
               </li>
             </ul>
           </li>
