@@ -6,7 +6,7 @@ import NavDropdown from "./NavDropdown";
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null); // 👈
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -47,8 +47,6 @@ function Navbar() {
             menuOpen ? "flex" : "hidden"
           }`}
         >
-          <li className="hover:underline cursor-pointer">Home</li>
-
           <NavDropdown
             label="Premier League"
             items={[
@@ -98,7 +96,7 @@ function Navbar() {
               "Schalke",
               "Wolfsburg",
             ]}
-            isOpen={activeDropdown === "BundesLiga"}
+            isOpen={activeDropdown === "Bundesliga"}
             onToggle={handleDropdownToggle}
           />
           <NavDropdown
@@ -114,9 +112,7 @@ function Navbar() {
             isOpen={activeDropdown === "Ligue 1"}
             onToggle={handleDropdownToggle}
           />
-
-          <li className="hover:underline cursor-pointer">About</li>
-          <li className="hover:underline cursor-pointer">Contact</li>
+          <li className="hover:underline cursor-pointer">Transfers</li>
         </ul>
       </div>
     </nav>

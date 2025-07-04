@@ -37,7 +37,11 @@ function Footer() {
 
         {/* Bottom section */}
         <div className="mt-8 border-t border-gray-700 pt-6 text-sm text-center text-gray-400">
-          © {new Date().getFullYear()} YourFootballSite. All rights reserved.
+          © {new Date().getFullYear()}{" "}
+          <span className="font-semibold hover:text-white cursor-pointer">
+            Yours Truly
+          </span>
+          . All rights reserved.
         </div>
       </div>
     </footer>

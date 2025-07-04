@@ -1,11 +1,12 @@
-import Footer from "./Components/Footer";
 import Header from "./sections/Header";
+import BlogLayout from "./Components/BlogLayout";
+import Footer from "./Components/Footer";
 
 function App() {
   return (
     <div className="">
       <Header />
-      <h1>Hello World </h1>
+      <BlogLayout />
       <Footer />
     </div>
   );
