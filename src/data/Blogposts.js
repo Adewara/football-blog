@@ -30,6 +30,11 @@ const blogPosts = [
     title: "Is Arteta Ruining Arsenal?",
     image: "/images/blog6.jpg",
   },
+  {
+    id: 7,
+    title: "Can Madrid win the Club World Cup?",
+    image: "/images/blog2.jpg",
+  },
 ];
 
 export default blogPosts;
