@@ -1,12 +1,12 @@
+import { Outlet } from "react-router-dom";
 import Header from "./sections/Header";
-import BlogLayout from "./Components/BlogLayout";
 import Footer from "./Components/Footer";
 
 function App() {
   return (
-    <div className="">
+    <div>
       <Header />
-      <BlogLayout />
+      <Outlet />
       <Footer />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Bookmark } from "lucide-react"; // or any icon lib
+import { Bookmark } from "lucide-react";
 
 function BlogPost({ image, title, full = false }) {
   return (
