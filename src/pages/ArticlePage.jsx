@@ -1,10 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import blogPosts from "../data/blogPosts";
 import NotFound from "./NotFound";
 
 function ArticlePage() {
   const params = useParams();
   const article = blogPosts.find((p) => p.id === params.articleId);
+
+  const navigate = useNavigate();
 
   if (article) {
     return (
@@ -23,7 +25,7 @@ function ArticlePage() {
         />
 
         {/* Content */}
-        <div className="prose prose-lg prose-invert max-w-none text-gray-200">
+        <div className="prose prose-lg prose-invert max-w-none text-gtey-900">
           {/* Assume post.content is HTML or Markdown rendered */}
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
         </div>
@@ -41,6 +43,14 @@ function ArticlePage() {
             ))}
           </div>
           {/* Add Bookmark here if needed */}
+          <div>
+            <button
+              onClick={() => navigate(-1)}
+              className="bg-gray-600 hover:bg-gray-800 text-white transition duration-300"
+            >
+              Go back
+            </button>
+          </div>
         </div>
       </div>
     );

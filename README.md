@@ -2,4 +2,12 @@
 
 Simple football blog website built using React and Vite.
 
-## More to come...
+## includes:
+
+React-Router
+TailwindCss
+Lucide icons
+
+### Live demo:
+
+football-blog-project.netlify.app

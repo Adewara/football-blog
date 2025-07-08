@@ -1,6 +1,6 @@
 import blogPosts from "../data/blogPosts";
-import BlogHero from "../components/BlogHero";
-import BlogGrid from "../components/BlogGrid";
+import BlogHero from "../Components/BlogHero";
+import BlogGrid from "../Components/BlogGrid";
 
 function BlogHome() {
   const heroPost = blogPosts.find((post) => post.featured);
