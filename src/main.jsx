@@ -7,6 +7,7 @@ import App from "./App.jsx";
 import BlogLayout from "./Components/BlogLayout.jsx";
 import ArticlePage from "./pages/ArticlePage.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import AuthPage from "./pages/authpage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       { path: "", element: <BlogLayout /> },
       { path: "article/:articleId", element: <ArticlePage /> }, // Article page
     ],
+  },
+  {
+    path: "/auth",
+    element: <AuthPage />,
   },
   {
     path: "*",
