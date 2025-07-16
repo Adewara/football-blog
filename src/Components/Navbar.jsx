@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { Menu, X } from "lucide-react";
 import NavDropdown from "./NavDropdown";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -99,20 +100,16 @@ function Navbar() {
             isOpen={activeDropdown === "Bundesliga"}
             onToggle={handleDropdownToggle}
           />
-          <NavDropdown
-            label="Ligue 1"
-            items={[
-              "Paris Saint Germain",
-              "Olympique Lyon",
-              "AS Monaco",
-              "Marseille",
-              "OGC Nice",
-              "Rennes FC",
-            ]}
-            isOpen={activeDropdown === "Ligue 1"}
-            onToggle={handleDropdownToggle}
-          />
+
           <li className="hover:underline cursor-pointer">Transfers</li>
+          <li>
+            <Link
+              to="/auth"
+              className="text-white border border-white px-4 py-1 rounded hover:bg-white hover:text-gray-900 transition"
+            >
+              Sign In
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

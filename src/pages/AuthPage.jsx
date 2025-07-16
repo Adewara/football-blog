@@ -53,7 +53,7 @@ function AuthPage() {
               required
               value={formData.email}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -67,7 +67,7 @@ function AuthPage() {
               required
               value={formData.password}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -82,7 +82,7 @@ function AuthPage() {
                 required
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-gray-500"
               />
             </div>
           )}
@@ -93,7 +93,7 @@ function AuthPage() {
 
           <button
             type="submit"
-            className="w-full bg-red-600 hover:bg-red-700 transition text-white py-2 rounded-md font-medium"
+            className="w-full bg-gray-600 hover:bg-gray-700 transition text-white py-2 rounded-md font-medium"
           >
             {isLogin ? "Login" : "Sign Up"}
           </button>
@@ -102,7 +102,7 @@ function AuthPage() {
         <div className="mt-4 text-sm text-center text-gray-600">
           {isLogin ? (
             <>
-              Don’t have an account?{" "}
+              Don't have an account?
               <button
                 onClick={() => setIsLogin(false)}
                 className="text-red-600 font-medium hover:underline"

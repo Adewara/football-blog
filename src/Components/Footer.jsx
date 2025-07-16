@@ -23,13 +23,25 @@ function Footer() {
 
           {/* Social icons */}
           <div className="flex space-x-4">
-            <a href="#" aria-label="Facebook" className="hover:text-white">
+            <a
+              href="https://x.com/great_vado"
+              aria-label="Facebook"
+              className="hover:text-white"
+            >
               <Facebook className="w-5 h-5" />
             </a>
-            <a href="#" aria-label="Twitter" className="hover:text-white">
+            <a
+              href="https://x.com/great_vado"
+              aria-label="Twitter"
+              className="hover:text-white"
+            >
               <Twitter className="w-5 h-5" />
             </a>
-            <a href="#" aria-label="YouTube" className="hover:text-white">
+            <a
+              href="https://x.com/great_vado"
+              aria-label="YouTube"
+              className="hover:text-white"
+            >
               <Youtube className="w-5 h-5" />
             </a>
           </div>
