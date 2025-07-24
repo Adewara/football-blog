@@ -10,4 +10,4 @@ Lucide icons
 
 ### Live demo:
 
-football-blog-project.netlify.app
+https://football-blog-project.netlify.app
