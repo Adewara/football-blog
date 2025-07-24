@@ -7,8 +7,8 @@ import App from "./App.jsx";
 import BlogLayout from "./Components/BlogLayout.jsx";
 import ArticlePage from "./pages/ArticlePage.jsx";
 import NotFound from "./pages/NotFound.jsx";
-import AuthPage from "./pages/authpage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
+import AuthPage from "./pages/AuthPage.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
-  { path: "/dashboard", element: <DashboardPage /> },
+  { path: "/dashboard", element: <Dashboard /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
