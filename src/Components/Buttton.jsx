@@ -1,4 +1,3 @@
-// components/Button.jsx
 function Button({ children, onClick, variant = "primary", ...props }) {
   const styles = {
     primary: "bg-blue-600 text-white",
