@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useAuth } from "../Context/AuthContext";
+import { Link, Navigate } from "react-router-dom";
 
 function AuthPage() {
+  const { user, login, signup, loading: authLoading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -8,6 +11,19 @@ function AuthPage() {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [processing, setProcessing] = useState(false);
+
+  // Wait until Firebase finishes checking the user state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        Checking authentication...
+      </div>
+    );
+  }
+
+  // Redirect only after Firebase confirms the user
+  if (user) return <Navigate to="/dashboard" replace />;
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -16,7 +32,7 @@ function AuthPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isLogin && formData.password !== formData.confirmPassword) {
@@ -25,13 +41,18 @@ function AuthPage() {
     }
 
     setError("");
+    setProcessing(true);
 
-    if (isLogin) {
-      console.log("Logging in with:", formData.email, formData.password);
-      // TODO: connect to backend
-    } else {
-      console.log("Registering with:", formData.email, formData.password);
-      // TODO: connect to backend
+    try {
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        await signup(formData.email, formData.password);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -93,9 +114,10 @@ function AuthPage() {
 
           <button
             type="submit"
-            className="w-full bg-gray-600 hover:bg-gray-700 transition text-white py-2 rounded-md font-medium"
+            disabled={processing}
+            className="w-full bg-gray-600 hover:bg-gray-700 transition text-white py-2 rounded-md font-medium cursor-pointer"
           >
-            {isLogin ? "Login" : "Sign Up"}
+            {processing ? "Processing..." : isLogin ? "Login" : "Sign Up"}
           </button>
         </form>
 
@@ -121,6 +143,16 @@ function AuthPage() {
               </button>
             </>
           )}
+        </div>
+
+        {/* Homepage link */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/"
+            className="text-gray-500 text-sm hover:text-gray-700 hover:underline"
+          >
+            ← Back to Homepage
+          </Link>
         </div>
       </div>
     </div>

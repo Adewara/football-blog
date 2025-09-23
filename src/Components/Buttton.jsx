@@ -3,6 +3,7 @@ function Button({ children, onClick, variant = "primary", ...props }) {
     primary: "bg-blue-600 text-white",
     danger: "bg-red-600 text-white",
     outline: "border border-gray-300 text-gray-700",
+    back: "bg-gray-600 text-white transition duration-300",
   };
 
   return (

@@ -1,62 +1,62 @@
-import { useState } from "react";
+import { useEffect, useReducer } from "react";
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import DashboardSidebar from "../Components/DashboardSidebar";
 import BlogView from "../Components/BlogView";
 import Modal from "../Components/Modal";
 import PostForm from "../Components/PostForm";
-
-// Sample blog posts
-const mockPosts = [
-  { id: "1", title: "First Post", content: "Lorem ipsum...", image: "" },
-  { id: "2", title: "Another Post", content: "Dolor sit amet...", image: "" },
-];
+import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
 
 function Dashboard() {
-  const [posts, setPosts] = useState(mockPosts);
-  const [activePost, setActivePost] = useState(posts[0]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const [state, dispatch] = useReducer(dashboardReducer, initialState);
 
-  // Delete post
-  const handleDelete = () => {
-    setPosts((prev) => prev.filter((p) => p.id !== activePost.id));
-    setActivePost(null);
-    setShowDeleteModal(false);
-  };
+  // Prevent accidental leaving without logout
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
-  // Save after edit
-  const handleSavePost = (updatedPost) => {
-    setPosts((prev) =>
-      prev.map((p) => (p.id === updatedPost.id ? updatedPost : p))
-    );
-    setActivePost(updatedPost);
-    setShowEditModal(false);
-  };
-
-  // Save new post
-  const handleCreatePost = (newPost) => {
-    setPosts((prev) => [newPost, ...prev]);
-    setActivePost(newPost);
-    setShowCreateModal(false);
+  // Confirm logout
+  const confirmLogout = async () => {
+    await logout();
+    dispatch({ type: "CLOSE_MODAL" });
+    navigate("/auth");
   };
 
   return (
     <div className="flex h-screen relative">
       {/* Sidebar */}
       <DashboardSidebar
-        posts={posts}
-        activeId={activePost?.id}
-        onSelect={setActivePost}
-        onCreate={() => setShowCreateModal(true)}
+        posts={state.posts}
+        activeId={state.activePost?.id}
+        onSelect={(post) =>
+          dispatch({ type: "SET_ACTIVE_POST", payload: post })
+        }
+        onCreate={() => dispatch({ type: "OPEN_MODAL", payload: "create" })}
       />
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto p-6 relative">
-        {activePost ? (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => dispatch({ type: "OPEN_MODAL", payload: "logout" })}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </div>
+
+        {state.activePost ? (
           <BlogView
-            post={activePost}
-            onEdit={() => setShowEditModal(true)}
-            onDelete={() => setShowDeleteModal(true)}
+            post={state.activePost}
+            onEdit={() => dispatch({ type: "OPEN_MODAL", payload: "edit" })}
+            onDelete={() => dispatch({ type: "OPEN_MODAL", payload: "delete" })}
           />
         ) : (
           <p className="text-center text-gray-500 mt-20">
@@ -65,38 +65,63 @@ function Dashboard() {
         )}
       </main>
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
+      {/* Modals */}
+      {state.modal === "delete" && (
         <Modal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={handleDelete}
+          isOpen
+          onClose={() => dispatch({ type: "CLOSE_MODAL" })}
+          onConfirm={() => dispatch({ type: "DELETE_POST" })}
         />
       )}
 
-      {/* Edit Modal */}
-      {showEditModal && (
-        <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)}>
+      {state.modal === "edit" && (
+        <Modal isOpen onClose={() => dispatch({ type: "CLOSE_MODAL" })}>
           <PostForm
             mode="edit"
-            post={activePost}
-            onClose={() => setShowEditModal(false)}
-            onSave={handleSavePost}
+            post={state.activePost}
+            onClose={() => dispatch({ type: "CLOSE_MODAL" })}
+            onSave={(updatedPost) =>
+              dispatch({ type: "SAVE_POST", payload: updatedPost })
+            }
           />
         </Modal>
       )}
 
-      {/* Create Modal */}
-      {showCreateModal && (
-        <Modal
-          isOpen={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-        >
+      {state.modal === "create" && (
+        <Modal isOpen onClose={() => dispatch({ type: "CLOSE_MODAL" })}>
           <PostForm
             mode="create"
-            onClose={() => setShowCreateModal(false)}
-            onSave={handleCreatePost}
+            onClose={() => dispatch({ type: "CLOSE_MODAL" })}
+            onSave={(newPost) =>
+              dispatch({ type: "CREATE_POST", payload: newPost })
+            }
           />
+        </Modal>
+      )}
+
+      {state.modal === "logout" && (
+        <Modal
+          isOpen
+          onClose={() => dispatch({ type: "CLOSE_MODAL" })}
+          onConfirm={confirmLogout}
+        >
+          <p className="mb-4 text-gray-800">
+            Are you sure you want to log out?
+          </p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => dispatch({ type: "CLOSE_MODAL" })}
+              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmLogout}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Logout
+            </button>
+          </div>
         </Modal>
       )}
     </div>

@@ -9,6 +9,8 @@ import ArticlePage from "./pages/ArticlePage.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import { AuthProvider } from "./Context/AuthContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,14 +26,23 @@ const router = createBrowserRouter([
     element: <AuthPage />,
   },
   {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "*",
     element: <NotFound />,
   },
-  { path: "/dashboard", element: <Dashboard /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
