@@ -1,7 +1,4 @@
-// components/PostForm.jsx
-
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 function PostForm({ post = {}, mode = "create", onClose, onSave }) {
   const [title, setTitle] = useState(post.title || "");
@@ -30,14 +27,13 @@ function PostForm({ post = {}, mode = "create", onClose, onSave }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newPost = {
-      id: mode === "edit" ? post.id : uuidv4(),
+    const postData = {
       title,
       content,
       image: preview,
     };
 
-    onSave(newPost);
+    onSave(postData);
   };
 
   return (

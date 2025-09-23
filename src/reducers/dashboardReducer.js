@@ -1,16 +1,6 @@
-// reducers/dashboardReducer.js
-
 export const initialState = {
-  posts: [
-    { id: "1", title: "First Post", content: "Lorem ipsum...", image: "" },
-    { id: "2", title: "Another Post", content: "Dolor sit amet...", image: "" },
-  ],
-  activePost: {
-    id: "1",
-    title: "First Post",
-    content: "Lorem ipsum...",
-    image: "",
-  },
+  posts: [], // always synced from Firestore
+  activePost: null, // no default selected post
   modal: null, // "delete" | "edit" | "create" | "logout" | null
 };
 
@@ -31,7 +21,7 @@ export function dashboardReducer(state, action) {
     case "DELETE_POST":
       return {
         ...state,
-        posts: state.posts.filter((p) => p.id !== state.activePost.id),
+        posts: state.posts.filter((p) => p.id !== state.activePost?.id),
         activePost: null,
         modal: null,
       };
@@ -46,13 +36,13 @@ export function dashboardReducer(state, action) {
         modal: null,
       };
 
-    case "CREATE_POST":
-      return {
-        ...state,
-        posts: [action.payload, ...state.posts],
-        activePost: action.payload,
-        modal: null,
-      };
+    // case "CREATE_POST":
+    //   return {
+    //     ...state,
+    //     posts: [action.payload, ...state.posts],
+    //     activePost: action.payload,
+    //     modal: null,
+    //   };
 
     default:
       return state;

@@ -1,18 +1,27 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
 import DashboardSidebar from "../Components/DashboardSidebar";
 import BlogView from "../Components/BlogView";
-import Modal from "../Components/Modal";
-import PostForm from "../Components/PostForm";
+import DashboardModals from "../Components/DashboardModals";
+
 import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
+import {
+  createPost,
+  updatePost,
+  deletePost,
+  subscribeToPosts,
+} from "../services/postService";
 
 function Dashboard() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(dashboardReducer, initialState);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Prevent accidental leaving without logout
+  // Prevent accidental page leave
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       e.preventDefault();
@@ -22,12 +31,78 @@ function Dashboard() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
-  // Confirm logout
-  const confirmLogout = async () => {
-    await logout();
-    dispatch({ type: "CLOSE_MODAL" });
-    navigate("/auth");
+  // Firestore real-time subscription
+  useEffect(() => {
+    const unsubscribe = subscribeToPosts(
+      (posts) => {
+        dispatch({ type: "SET_POSTS", payload: posts });
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Firestore subscription error:", err);
+        setError("Failed to load posts");
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  // CRUD Handlers
+
+  // Create Post (relies on subscription to update state)
+  const handleCreate = async (newPost) => {
+    try {
+      await createPost(newPost);
+    } catch (err) {
+      alert("Failed to create post: " + err.message);
+    } finally {
+      dispatch({ type: "CLOSE_MODAL" });
+    }
   };
+
+  // Update Post
+  const handleSave = async (updatedData) => {
+    if (!state.activePost) return;
+
+    console.log("Attempting to update post:", state.activePost);
+
+    try {
+      await updatePost(state.activePost.id, updatedData);
+    } catch (err) {
+      console.error("Update failed:", err);
+      alert("Failed to update post: " + err.message);
+    } finally {
+      dispatch({ type: "CLOSE_MODAL" });
+    }
+  };
+
+  // Delete Post
+  const handleDelete = async () => {
+    if (!state.activePost) return;
+
+    try {
+      await deletePost(state.activePost.id);
+      dispatch({ type: "DELETE_POST" });
+    } catch (err) {
+      alert("Failed to delete post: " + err.message);
+    } finally {
+      dispatch({ type: "CLOSE_MODAL" });
+    }
+  };
+
+  // Logout
+  const handleLogout = async () => {
+    try {
+      await logout();
+      dispatch({ type: "CLOSE_MODAL" });
+      navigate("/auth");
+    } catch (err) {
+      alert("Failed to logout: " + err.message);
+    }
+  };
+
+  // Render
 
   return (
     <div className="flex h-screen relative">
@@ -52,7 +127,11 @@ function Dashboard() {
           </button>
         </div>
 
-        {state.activePost ? (
+        {loading ? (
+          <p className="text-center text-gray-400 mt-20">Loading posts...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 mt-20">{error}</p>
+        ) : state.activePost ? (
           <BlogView
             post={state.activePost}
             onEdit={() => dispatch({ type: "OPEN_MODAL", payload: "edit" })}
@@ -66,64 +145,15 @@ function Dashboard() {
       </main>
 
       {/* Modals */}
-      {state.modal === "delete" && (
-        <Modal
-          isOpen
-          onClose={() => dispatch({ type: "CLOSE_MODAL" })}
-          onConfirm={() => dispatch({ type: "DELETE_POST" })}
-        />
-      )}
-
-      {state.modal === "edit" && (
-        <Modal isOpen onClose={() => dispatch({ type: "CLOSE_MODAL" })}>
-          <PostForm
-            mode="edit"
-            post={state.activePost}
-            onClose={() => dispatch({ type: "CLOSE_MODAL" })}
-            onSave={(updatedPost) =>
-              dispatch({ type: "SAVE_POST", payload: updatedPost })
-            }
-          />
-        </Modal>
-      )}
-
-      {state.modal === "create" && (
-        <Modal isOpen onClose={() => dispatch({ type: "CLOSE_MODAL" })}>
-          <PostForm
-            mode="create"
-            onClose={() => dispatch({ type: "CLOSE_MODAL" })}
-            onSave={(newPost) =>
-              dispatch({ type: "CREATE_POST", payload: newPost })
-            }
-          />
-        </Modal>
-      )}
-
-      {state.modal === "logout" && (
-        <Modal
-          isOpen
-          onClose={() => dispatch({ type: "CLOSE_MODAL" })}
-          onConfirm={confirmLogout}
-        >
-          <p className="mb-4 text-gray-800">
-            Are you sure you want to log out?
-          </p>
-          <div className="flex justify-end gap-2">
-            <button
-              onClick={() => dispatch({ type: "CLOSE_MODAL" })}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={confirmLogout}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Logout
-            </button>
-          </div>
-        </Modal>
-      )}
+      <DashboardModals
+        modal={state.modal}
+        activePost={state.activePost}
+        dispatch={dispatch}
+        onCreate={handleCreate}
+        onSave={handleSave}
+        onDelete={handleDelete}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }
