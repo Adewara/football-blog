@@ -36,13 +36,13 @@ export function dashboardReducer(state, action) {
         modal: null,
       };
 
-    // case "CREATE_POST":
-    //   return {
-    //     ...state,
-    //     posts: [action.payload, ...state.posts],
-    //     activePost: action.payload,
-    //     modal: null,
-    //   };
+    case "CREATE_POST":
+      return {
+        ...state,
+        posts: [action.payload, ...state.posts],
+        activePost: action.payload,
+        modal: null,
+      };
 
     default:
       return state;

@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 function PostForm({ post = {}, mode = "create", onClose, onSave }) {
   const [title, setTitle] = useState(post.title || "");
   const [content, setContent] = useState(post.content || "");
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(post.image || null);
+  const [image, setImage] = useState(null); // File object
+  const [preview, setPreview] = useState(post.image || null); // preview URL
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (post.image) {
@@ -15,22 +16,33 @@ function PostForm({ post = {}, mode = "create", onClose, onSave }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // ✅ Size check (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("File size must be under 5MB");
+        return;
+      }
+
       setImage(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
+      reader.onloadend = () => setPreview(reader.result);
       reader.readAsDataURL(file);
+      setError(""); // clear error
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // ✅ Validation: Image required only for new posts
+    if (mode === "create" && !image) {
+      setError("Please upload an image for this post.");
+      return;
+    }
+
     const postData = {
-      title,
-      content,
-      image: preview,
+      title: title.trim(),
+      content: content.trim(),
+      image: image || post.image || null, // File object if new, otherwise existing URL
     };
 
     onSave(postData);
@@ -42,6 +54,7 @@ function PostForm({ post = {}, mode = "create", onClose, onSave }) {
         {mode === "edit" ? "Edit Post" : "Create New Post"}
       </h2>
 
+      {/* Title */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Title</label>
         <input
@@ -53,6 +66,7 @@ function PostForm({ post = {}, mode = "create", onClose, onSave }) {
         />
       </div>
 
+      {/* Content */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Content</label>
         <textarea
@@ -64,6 +78,7 @@ function PostForm({ post = {}, mode = "create", onClose, onSave }) {
         />
       </div>
 
+      {/* Image */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Image</label>
         <input type="file" accept="image/*" onChange={handleImageChange} />
@@ -74,8 +89,10 @@ function PostForm({ post = {}, mode = "create", onClose, onSave }) {
             className="mt-2 max-h-64 w-full object-cover rounded border"
           />
         )}
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
       </div>
 
+      {/* Actions */}
       <div className="flex justify-end gap-3">
         <button
           type="button"

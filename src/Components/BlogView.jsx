@@ -7,12 +7,16 @@ function BlogView({ post, onEdit, onDelete }) {
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-bold">{post.title}</h1>
 
-      {post.image && (
+      {post.image ? (
         <img
           src={post.image}
           alt={post.title}
           className="w-full max-h-[400px] object-cover rounded-md"
         />
+      ) : (
+        <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded-md">
+          <span className="text-gray-500">No image available</span>
+        </div>
       )}
 
       <p className="text-gray-700 whitespace-pre-line">{post.content}</p>

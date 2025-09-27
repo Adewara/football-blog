@@ -82,7 +82,8 @@ function Dashboard() {
     if (!state.activePost) return;
 
     try {
-      await deletePost(state.activePost.id);
+      // ✅ Pass id + imageUrl to delete both doc and image
+      await deletePost(state.activePost.id, state.activePost.image);
       dispatch({ type: "DELETE_POST" });
     } catch (err) {
       alert("Failed to delete post: " + err.message);
@@ -103,7 +104,6 @@ function Dashboard() {
   };
 
   // Render
-
   return (
     <div className="flex h-screen relative">
       {/* Sidebar */}
