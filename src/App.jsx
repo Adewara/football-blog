@@ -4,9 +4,16 @@ import Footer from "./Components/Footer";
 
 function App() {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
+      {/* Header at the top */}
       <Header />
-      <Outlet />
+
+      {/* Main content expands to fill remaining height */}
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+
+      {/* Footer at the bottom */}
       <Footer />
     </div>
   );

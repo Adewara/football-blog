@@ -1,10 +1,10 @@
-import { Bookmark } from "lucide-react";
 import { Link } from "react-router-dom";
+import BookmarkButton from "./BookmarkButton";
 
 function BlogHero({ post }) {
   return (
     <div
-      className="relative h-screen lg:max-w-7xl lg: mx-auto bg-cover bg-center"
+      className="relative h-screen lg:max-w-7xl mx-auto bg-cover bg-center"
       style={{ backgroundImage: `url(${post.image})` }}
     >
       <div className="absolute inset-0 bg-black/50 flex flex-col justify-end p-8">
@@ -13,7 +13,15 @@ function BlogHero({ post }) {
             {post.title}
           </h1>
         </Link>
-        <Bookmark className="text-white w-6 h-6 self-end" />
+
+        {/* Big transparent bookmark */}
+        {/* <div className="self-end">
+          <BookmarkButton
+            postId={post.id}
+            className="bg-transparent hover:bg-transparent self-end"
+            iconClassName="text-white w-6 h-6 md:w-12 md:h-12 lg:w-16 lg:h-16"
+          />
+        </div> */}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import AuthPage from "./pages/AuthPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import { AuthProvider } from "./Context/AuthContext.jsx";
+import { BookmarksProvider } from "./Context/BookmarksContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,8 +42,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <BookmarksProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </BookmarksProvider>
   </StrictMode>
 );
